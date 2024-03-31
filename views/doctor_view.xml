@@ -1,0 +1,101 @@
+<odoo>
+    <record id="doctor_tree_view"
+            model="ir.ui.view">
+            <field name="name">doctor tree view</field>
+            <field name="model">doctor</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="age"/>
+                    <field name="departments_id"/>
+                    <field name="email" optional="1"/>
+                </tree>
+            </field>
+    </record>
+
+    <record id="doctor_form_view"
+            model="ir.ui.view">
+            <field name="name">doctor form</field>
+            <field name="model">doctor</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <header>
+                            <div class="oe_title">
+                                <label for="name"/>
+                                <h1>
+                                    <field name="name" placeholder="Doctor's Name" style="font-size: min(4vw, 2.6rem);"/>
+                                </h1>
+                            </div>
+                            <field name="image" widget="image" class="oe_avatar" options="{&quot;zoom&quot;: true, &quot;preview_image&quot;: &quot;avatar_128&quot;}"/>
+                        </header>
+                        <group>
+                            <group string="Main Info.">
+                                <field name="joining_date"/>
+                                <field name="national_id"/>
+                                <field name="departments_id"
+                                       domain="[('is_opened', '=', True)]"/>
+<!--                                domain="[('is_opened', '=', True)]"-->
+<!--                                invisible="departments_id.is_opened == False"/>-->
+                                <field name="email"/>
+                            </group>
+                            <group string="Additional Info.">
+                                <field name="birth_date"/>
+                                <field name="gender"/>
+                                <field name="age"/>
+                                <field name="salary"/>
+                                <field name="phone" widget="phone"/>
+                                <field name="address"/>
+                            </group>
+                        </group>
+<!--                          <notebook>-->
+<!--                              <page string="Address">-->
+<!--                                  <field name="address"/>-->
+<!--                              </page>-->
+<!--                         </notebook>-->
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+    </record>
+
+    <record id="doctor_search_view"
+            model="ir.ui.view">
+        <field name="name">doctor search</field>
+        <field name="model">doctor</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="departments_id"/>
+
+                <filter name="age"
+                        string="Age"
+                        domain="[('age','>',30)]"
+                />
+                <filter name="group_by_departments"
+                        string="Department"
+                        context="{'group_by':'departments_id'}"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="doctor_action" model="ir.actions.act_window">
+        <field name="name">Doctors Menu</field>
+        <field name="res_model">doctor</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+
+    </record>
+
+    <menuitem
+            id="doctor_menu_item"
+            name="Doctors"
+            parent="hospital_root_menu"
+            action="doctor_action"
+    />
+</odoo>

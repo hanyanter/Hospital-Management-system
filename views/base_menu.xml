@@ -1,0 +1,13 @@
+<odoo>
+    <menuitem
+            id="hospital_root_menu"
+            name="Hospital Sys."
+            web_icon="hospital_ms,/static/description/icon.png"
+    />
+    <menuitem
+            id="patients_menu"
+            name="Patients"
+            parent="hospital_root_menu"
+    />
+
+</odoo>

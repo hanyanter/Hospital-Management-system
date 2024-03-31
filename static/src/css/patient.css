@@ -1,0 +1,34 @@
+.custom_header table tr th {
+background-color: sky !important;
+color: black !important;
+text-align: left !important;
+}
+
+.custom_header table tr, th, td  {
+text-align: left !important;
+}
+
+.custom_header table tr > th:nth-child(2) {
+width: 40% !important;
+}
+
+.custom_header table tr > th:nth-child(3,4) {
+width: 30% !important;
+}
+
+.custom_header table tr > th:nth-child(5) {
+width: 20% !important;
+}
+
+.custom_report_style_left {
+text-align: left ;
+width: 50% ;
+float: left ;
+}
+
+.custom_report_style_right {
+text-align: left ;
+width: 50% ;
+float: right ;
+}
+

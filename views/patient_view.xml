@@ -1,0 +1,176 @@
+<odoo>
+    <record id="patient_tree_view" model="ir.ui.view">
+        <field name="name">patient tree view</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <tree class="custom_header">
+                <field name="name"/>
+                <field name="age"/>
+                <field name="blood_type"/>
+                <field name="state"/>
+                <field name="pcr" optional="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="patient_form_view" model="ir.ui.view">
+        <field name="name">patient form</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': 1}"/>
+                    <button name="action_undetermined"
+                            string="undetermined"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state in ('undetermined', 'healthy')"
+                    />
+                    <button name="action_good"
+                            string="good"
+                            type="object"
+                            class="btn-success"
+                            invisible="state in ('good', 'healthy')"
+                    />
+                    />
+                    <button name="action_serious"
+                            string="serious"
+                            type="object"
+                            class="btn-danger"
+                            invisible="state in ('serious', 'healthy')"
+                    />
+                </header>
+                <sheet>
+                    <header>
+                        <div class="oe_title">
+                            <label for="ref"/>
+                            <h1>
+                                <field name="ref"/>
+                            </h1>
+                            <label for="name"/>
+                            <h3>
+                                <field name="name" placeholder="Patient's Name" readonly="state== 'healthy'"/>
+                            </h3>
+                        </div>
+                        <field name="image" widget="image" class="oe_avatar"
+                               options="{&quot;zoom&quot;: true, &quot;preview_image&quot;: &quot;avatar_128&quot;}"/>
+                    </header>
+                    <group>
+                        <group string="Main Info.">
+                            <field name="state" readonly="state== 'healthy'" invisible="1"/>
+                            <field name="cr_ratio" readonly="state== 'healthy'"/>
+                            <field name="blood_type" readonly="state== 'healthy'"/>
+                            <field name="pcr"
+                                   widget="boolean_toggle"
+                                   string="PCR"
+                                   readonly="1"
+
+                            />
+                            <field name="departments_ids"
+                                   widget="many2many_tags"
+                                   readonly="state== 'healthy'"
+                            />
+                            <field name="doctors_ids"
+                                   widget="many2many_tags"
+                                   readonly="state== 'healthy'"
+                                   domain="[('id', 'in', (departments_ids))]"
+                            />
+                            <!--                                       invisible="doctors_ids not in departments_ids"/>-->
+                            <!--                                                                   domain="[('id', 'in', (departments_ids))]"-->
+
+                        </group>
+
+                        <group string="Additional Info.">
+                            <field name="phone"/>
+                            <field name="birth_date" readonly="state== 'healthy'"/>
+                            <field name="age" readonly="1"/>
+                            <field name="address" readonly="state== 'healthy'"/>
+                            <field name="history"
+                                   invisible="age >= 50"
+                                   readonly="state== 'healthy'"
+                            />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Log History">
+                            <group>
+                                <field name="write_uid" string="User" readonly="1"/>
+                                <field name="write_date" string="Date" readonly="1"/>
+                                <field name="description" string="Description"/>
+                            </group>
+                            <!--                                        <field name="log_ids">-->
+                            <!--                                            <tree editable="button">-->
+                            <!--                                                <field name="write_uid" string="User" readonly="1"/>-->
+                            <!--                                                <field name="write_date" string="Date" readonly="1"/>-->
+                            <!--                                                <field name="description" string="Description"/>-->
+                            <!--                                            </tree>-->
+                            <!--                                        </field>-->
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="patient_search_view" model="ir.ui.view">
+        <field name="name">patient search</field>
+        <field name="model">patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+
+                <!--                <filter name="is_injured"-->
+                <!--                        string="Injured"-->
+                <!--                        domain="[('injured','=',True)]"-->
+                <!--                />-->
+                <!--                <filter name="is_injured"-->
+                <!--                        string="Not Injured"-->
+                <!--                        domain="[('injured','=',False)]"-->
+                <!--                />-->
+                <!--                <filter name="group_by_position"-->
+                <!--                        string="Position"-->
+                <!--                        context="{'group_by':'position'}"-->
+                <!--                />-->
+            </search>
+        </field>
+    </record>
+
+    <record id="patient_action" model="ir.actions.act_window">
+        <field name="name">Patient Menu</field>
+        <field name="res_model">patient</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="healthy_patient_server_action" model="ir.actions.server">
+        <field name="name">Healthy</field>
+        <field name="model_id" ref="model_patient"/>
+        <field name="binding_model_id" ref="model_patient"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_healthy()
+        </field>
+    </record>
+
+    <record id="patient_change_state_server_action" model="ir.actions.server">
+        <field name="name">Change State</field>
+        <field name="model_id" ref="model_patient"/>
+        <field name="binding_model_id" ref="model_patient"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_open_change_state_wizard()
+        </field>
+    </record>
+
+    <menuitem
+            id="patient_menu_item"
+            name="Patients Menu"
+            parent="patients_menu"
+            action="patient_action"
+    />
+</odoo>

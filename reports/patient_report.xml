@@ -1,0 +1,231 @@
+<odoo>
+    <record id="patient_report" model="ir.actions.report">
+        <field name="name">Patient Report</field>
+        <field name="model">patient</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" ref="model_patient"/>
+        <field name="binding_type">report</field>
+        <field name="report_name">hospital_ms.patient_report_template</field>
+    </record>
+
+    <template id="patient_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+
+                    <!--                    &lt;!&ndash; Start Header &ndash;&gt;-->
+                    <!--                    <style>-->
+                    <!--                        .main {-->
+                    <!--                        color: black;-->
+                    <!--                        padding: 20px;-->
+                    <!--                        text-align: right;-->
+                    <!--                        width: 50% ;-->
+                    <!--                        float: right ;-->
+                    <!--                        }-->
+
+                    <!--                        .main h1 {-->
+                    <!--                        font-size: xx-large;-->
+                    <!--                        }-->
+
+                    <!--                        .main h3 {-->
+                    <!--                        font-size: 20px;-->
+                    <!--                        }-->
+
+                    <!--                        .custom_report_logo {-->
+                    <!--                        padding: 10px;-->
+                    <!--                        text-align: left ;-->
+                    <!--                        width: 50% ;-->
+                    <!--                        float: left ;-->
+                    <!--                        }-->
+                    <!--                    </style>-->
+                    <!--                    <header class="main">-->
+                    <!--                        <div class="custom_report_logo">-->
+                    <!--                            <img t-if="res_company.logo"-->
+                    <!--                                 t-att-src="image_data_uri(res_company.logo)"-->
+                    <!--                                 alt="Logo"-->
+                    <!--                                 width="150"-->
+                    <!--                                 height="150"/>-->
+                    <!--                        </div>-->
+                    <!--                        <h1>FOR HIGH MEDICAL CARE</h1>-->
+                    <!--                        <h3>-->
+                    <!--                            <span t-field="res_company.name"/>-->
+                    <!--                        </h3>-->
+                    <!--                        <h3>-->
+                    <!--                            <span t-field="res_company.street"/>-->
+                    <!--                        </h3>-->
+                    <!--                    </header>-->
+                    <!--                    &lt;!&ndash; End Header &ndash;&gt;-->
+
+                    <div class="page">
+                        <style>
+                            .grid-container {
+                            display: grid;
+                            grid-template-columns: 50% 50%;
+                            }
+                            .custom_report_style_left {
+                            padding: 10px;
+                            text-align: left ;
+                            width: 50% ;
+                            float: left ;
+                            }
+
+                            .custom_report_style_right {
+                            padding: 10px;
+                            text-align: left ;
+                            width: 50% ;
+                            float: right ;
+                            }
+
+                            div h2 {
+                            font-size: 20px;
+                            color: black;
+                            }
+
+                            div h2 span {
+                            font-size: 20px;
+                            }
+                        </style>
+                        <div>
+                            <h1 style="color:red;text-align:left;width:50%;float:left;">Patient Status Report</h1>
+                            <img t-if="o.image"
+                                 t-att-src="image_data_uri(o.image)"
+                                 alt="Logo"
+                                 width="100" height="130"/>
+                        </div>
+                        <br/>
+                        <div>
+                            <div class="custom_report_style_left">
+                                <h2>
+                                    Name:
+                                    <span t-field="o.name"/>
+                                </h2>
+                                <h2>
+                                    Age:
+                                    <span t-field="o.age"/>
+                                </h2>
+                                <h2>
+                                    Department:
+                                    <span t-field="o.departments_ids"/>
+                                </h2>
+                                <h2>
+                                    Doctors:
+                                    <span t-field="o.doctors_ids"/>
+                                </h2>
+                            </div>
+                            <div class="custom_report_style_right">
+                                <h2>
+                                    Birth Date:
+                                    <span t-field="o.birth_date"/>
+                                </h2>
+                                <h2>
+                                    PCR:
+                                    <span t-field="o.pcr"/>
+                                </h2>
+                                <h2>
+                                    Blood Type:
+                                    <span t-field="o.blood_type"/>
+                                </h2>
+                            </div>
+                        </div>
+                        <style>
+                            .custom_head {
+                            color: red;
+                            text-align: center;
+                            padding: 10px;
+                            margin: 10px;
+                            }
+
+                            table, th, td {
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            }
+
+                            th, td {
+                            padding: 10px;
+                            text-align: left;
+                            }
+
+                            th {
+                            background-color: DodgerBlue;
+                            font-size: 25px;
+                            }
+
+                            td {
+                            background-color: #f2f2f2;
+                            color: black;
+                            font-size: 20px;
+                            }
+                        </style>
+                        <br/>
+                        <h3 class="custom_head" style="color:white;">Log History</h3>
+                        <h3 class="custom_head">Log History</h3>
+                        <table class="table.table-bordered" string="Log History" style="width:100%">
+
+                            <thead>
+                                <th style="width:30%;">User</th>
+                                <th style="width:30%;">Date</th>
+                                <th>Info</th>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs" t-as="o">
+                                    <tr>
+                                        <td>
+                                            <span t-field="o.write_uid"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.write_date"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.description"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--                    &lt;!&ndash; Start Footer &ndash;&gt;-->
+                    <!--                    <footer>-->
+                    <!--                        <style>-->
+                    <!--                            ul {-->
+                    <!--                            font-size: 12px;-->
+                    <!--                            padding: 20px;-->
+                    <!--                            text-align: center;-->
+                    <!--                            }-->
+
+                    <!--                            ul li {-->
+                    <!--                            display: inline-block;-->
+                    <!--                            }-->
+
+                    <!--                            ul li::after {-->
+                    <!--                            content: " |";-->
+                    <!--                            }-->
+
+                    <!--                            ul li:last-child::after{-->
+                    <!--                            content: "";-->
+                    <!--                            }-->
+
+                    <!--                            t-->
+                    <!--                        </style>-->
+                    <!--                        <t t-foreach="docs" t-as="o">-->
+                    <!--                            <ul>-->
+                    <!--                                <li>-->
+                    <!--                                    <span t-field="res_company.phone"/>-->
+                    <!--                                </li>-->
+                    <!--                                <li>-->
+                    <!--                                    <span t-field="res_company.email"/>-->
+                    <!--                                </li>-->
+                    <!--                                <li>-->
+                    <!--                                    <span t-field="res_company.website"/>-->
+                    <!--                                </li>-->
+                    <!--                            </ul>-->
+                    <!--                            <h3 style="text-align:center;font-size: 14px;">Copyright 2024 (c) All Right Reserved</h3>-->
+                    <!--                        </t>-->
+                    <!--                    </footer>-->
+                    <!--                    &lt;!&ndash; End Footer &ndash;&gt;-->
+
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
